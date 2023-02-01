@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\{EventController, HomeController, UserController};
+use Illuminate\Support\Facades\{Auth, Route};
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +14,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+//Welcome Guest
 Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+//Welcome Auth
+Route::get('/home', [HomeController::class, 'index'])->name('dashboard');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Auth
+Auth::routes();
+Route::middleware(['auth'])->group(function () {
+    Route::resource('acara', EventController::class);
+    Route::resource('instansi', UserController::class);
+});
